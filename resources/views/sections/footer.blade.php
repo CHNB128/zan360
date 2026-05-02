@@ -1,3 +1,45 @@
-<footer class="content-info">
-  @php(dynamic_sidebar('sidebar-footer'))
+<footer class="site-footer" role="contentinfo">
+  <div class="site-footer__inner">
+    <div class="site-footer__brand-col">
+      <a class="site-footer__brand" href="{{ home_url('/') }}" aria-label="{{ get_bloginfo('name') }}">
+        @if (has_custom_logo())
+          {!! get_custom_logo() !!}
+        @else
+          <span class="site-footer__brand-mark" aria-hidden="true">NB</span>
+          <span class="site-footer__brand-name">{{ get_bloginfo('name') }}</span>
+        @endif
+      </a>
+
+      <p class="site-footer__copyright">
+        Copyright © {{ date('Y') }} | {{ get_bloginfo('name') }}
+      </p>
+    </div>
+
+    <div class="site-footer__links-col">
+      <h2 class="site-footer__heading">{{ __('Resources', 'sage') }}</h2>
+      <ul class="site-footer__list">
+        <li><a href="{{ home_url('/posts') }}">{{ __('Insights', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/law-firms') }}">{{ __('Firms & Moves', 'sage') }}</a></li>
+      </ul>
+    </div>
+
+    <div class="site-footer__links-col">
+      <h2 class="site-footer__heading">{{ __('Non-Billable', 'sage') }}</h2>
+      <ul class="site-footer__list">
+        <li><a href="{{ home_url('/about') }}">{{ __('About', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/contact') }}">{{ __('Contact', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/advertise') }}">{{ __('Advertise', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/write-for-us') }}">{{ __('Write For Us', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/privacy-policy') }}">{{ __('Privacy Policy', 'sage') }}</a></li>
+        <li><a href="{{ home_url('/terms-and-conditions') }}">{{ __('Terms and Conditions', 'sage') }}</a></li>
+      </ul>
+    </div>
+
+    <div class="site-footer__links-col">
+      <h2 class="site-footer__heading">{{ __('Follow Us', 'sage') }}</h2>
+      <ul class="site-footer__list">
+        <li><a href="#" aria-label="{{ __('LinkedIn', 'sage') }}">{{ __('LinkedIn', 'sage') }}</a></li>
+      </ul>
+    </div>
+  </div>
 </footer>

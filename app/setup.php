@@ -161,3 +161,28 @@ add_action('widgets_init', function () {
         'id' => 'sidebar-footer',
     ] + $config);
 });
+
+/**
+ * Show a notice when Polylang is missing.
+ *
+ * @return void
+ */
+add_action('admin_notices', function () {
+    if (! current_user_can('activate_plugins')) {
+        return;
+    }
+
+    if (defined('POLYLANG_VERSION')) {
+        return;
+    }
+
+    $install_url = admin_url('plugin-install.php?s=polylang&tab=search&type=term');
+
+    echo '<div class="notice notice-error"><p>';
+    echo wp_kses_post(sprintf(
+        /* translators: %s is the plugin install URL */
+        __('This theme requires Polylang. Please <a href="%s">install and activate Polylang</a>.', 'sage'),
+        esc_url($install_url)
+    ));
+    echo '</p></div>';
+});

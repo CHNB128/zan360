@@ -1,9 +1,14 @@
 @if (! post_password_required())
-  <section id="comments" class="comments">
+  <section id="comments" class="comments comments-section">
+    <header class="comments-section__header">
+      <h2 class="comments-section__title">{{ __('Comments', 'sage') }}</h2>
+      <p class="comments-section__subtitle">{{ __('Share your thoughts about this post.', 'sage') }}</p>
+    </header>
+
     @if ($responses())
-      <h2>
+      <h3 class="comments-section__responses-title">
         {!! $title !!}
-      </h2>
+      </h3>
 
       <ol class="comment-list">
         {!! $responses !!}
@@ -34,6 +39,12 @@
       </x-alert>
     @endif
 
-    @php(comment_form())
+    <div class="comments-section__form-wrap">
+      @php(comment_form([
+        'title_reply_before' => '<h3 class="comments-section__form-title">',
+        'title_reply_after' => '</h3>',
+        'class_submit' => 'comments-section__submit',
+      ]))
+    </div>
   </section>
 @endif
