@@ -78,7 +78,7 @@
       type="button"
       aria-expanded="false"
       aria-controls="site-navigation"
-      aria-label="{{ __('Toggle navigation', 'sage') }}"
+      aria-label="{{ \App\theme_translate('Toggle navigation') }}"
     >
       <span></span>
       <span></span>
@@ -88,7 +88,7 @@
     <nav
       id="site-navigation"
       class="site-header__nav"
-      aria-label="{{ wp_get_nav_menu_name('primary_navigation') ?: __('Primary navigation', 'sage') }}"
+      aria-label="{{ wp_get_nav_menu_name('primary_navigation') ?: \App\theme_translate('Primary navigation') }}"
     >
       @if (has_nav_menu('primary_navigation'))
         {!! wp_nav_menu([
@@ -120,7 +120,7 @@
           </ul>
         @endif
       @endif
-      <div class="site-header__languages" aria-label="{{ __('Language switcher', 'sage') }}">
+      <div class="site-header__languages" aria-label="{{ \App\theme_translate('Language switcher') }}">
         @foreach ($language_items as $language_item)
           <a
             href="{{ esc_url($language_item['url']) }}"
@@ -133,9 +133,9 @@
         @endforeach
       </div>
       @if (is_user_logged_in())
-        <a href="{{ admin_url() }}" class="site-header__jobs">{{ __('Account', 'sage') }}</a>
+        <a href="{{ admin_url() }}" class="site-header__jobs">{{ \App\theme_translate('Account') }}</a>
       @else
-        <a href="{{ wp_login_url(home_url('/')) }}" class="site-header__jobs">{{ __('Log in', 'sage') }}</a>
+        <a href="{{ wp_login_url(function_exists('pll_home_url') ? pll_home_url() : home_url('/')) }}" class="site-header__jobs">{{ \App\theme_translate('Log in') }}</a>
       @endif
     </nav>
   </div>

@@ -9,6 +9,40 @@ namespace App;
 use Illuminate\Support\Facades\Vite;
 
 /**
+ * Translate a theme interface string through Polylang when available.
+ */
+function theme_translate(string $text): string
+{
+    if (function_exists('pll__')) {
+        return pll__($text);
+    }
+
+    return __($text, 'sage');
+}
+
+/**
+ * Resolve a theme page URL for the currently selected language.
+ */
+function theme_localized_page_url(string $path): string
+{
+    $path = trim($path, '/');
+
+    if (function_exists('pll_get_post') && $page = get_page_by_path($path)) {
+        $translated_page_id = pll_get_post($page->ID);
+
+        if ($translated_page_id) {
+            return get_permalink($translated_page_id);
+        }
+    }
+
+    if (function_exists('pll_home_url')) {
+        return trailingslashit(pll_home_url()).$path;
+    }
+
+    return home_url('/'.$path);
+}
+
+/**
  * Inject styles into the block editor.
  *
  * @return array
@@ -83,6 +117,12 @@ add_action('after_setup_theme', function () {
      *
      * @link https://developer.wordpress.org/reference/functions/register_nav_menus/
      */
+
+    /**
+     * Make theme strings translatable via language files.
+     */
+    load_theme_textdomain('sage', get_template_directory().'/lang');
+
     register_nav_menus([
         'primary_navigation' => __('Primary Navigation', 'sage'),
     ]);
@@ -185,4 +225,69 @@ add_action('admin_notices', function () {
         esc_url($install_url)
     ));
     echo '</p></div>';
+});
+
+
+/**
+ * Register theme interface strings with Polylang.
+ *
+ * @return void
+ */
+add_action('init', function () {
+    if (! function_exists('pll_register_string')) {
+        return;
+    }
+
+    $strings = [
+        'Toggle navigation',
+        'Primary navigation',
+        'Language switcher',
+        'Account',
+        'Log in',
+        'Copyright',
+        'Categories',
+        'About',
+        'Contact',
+        'Advertise',
+        'Write For Us',
+        'Privacy Policy',
+        'Terms and Conditions',
+        'Follow Us',
+        'LinkedIn',
+        'Skip to content',
+        'Search for:',
+        'Search …',
+        'Search &hellip;',
+        'Search',
+        'Featured stories',
+        'More news',
+        'Search news',
+        'Find stories, interviews, insights and more.',
+        'See all',
+        'Latest posts',
+        'Latest',
+        'All category news',
+        'All news',
+        'View all',
+        'Previous',
+        'Next',
+        'Sorry, no results were found for this tag.',
+        'Sorry, no results were found.',
+        'Page not found',
+        'The page you are looking for does not exist or has been moved.',
+        'Go to homepage',
+        'Posts by',
+        'Author',
+        'News',
+        'No posts were found for this author.',
+        'By',
+        'Comments',
+        'Share your thoughts about this post.',
+        'Comments are closed.',
+        'Continued',
+    ];
+
+    foreach ($strings as $string) {
+        pll_register_string($string, $string, 'Theme');
+    }
 });
