@@ -8,6 +8,16 @@
     ];
 
     $language_items = [];
+    $footer_categories = get_categories([
+      'taxonomy' => 'category',
+      'hide_empty' => true,
+      'orderby' => 'name',
+      'order' => 'ASC',
+    ]);
+
+    if (is_wp_error($footer_categories)) {
+      $footer_categories = [];
+    }
   @endphp
   <div class="site-footer__inner">
     <div class="site-footer__brand-col">
@@ -23,7 +33,7 @@
     <div class="site-footer__links-col">
       <h2 class="site-footer__heading">{{ \App\theme_translate('Categories') }}</h2>
       <ul class="site-footer__list">
-        @foreach ($categories as $category)
+        @foreach ($footer_categories as $category)
           <li><a href="{{ get_category_link($category) }}">{{ $category->name }}</a></li>
         @endforeach
       </ul>

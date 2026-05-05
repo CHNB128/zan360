@@ -11,6 +11,12 @@
         {!! $title !!}
       </h1>
 
+      @if (has_excerpt())
+        <div class="single-post-page__excerpt p-summary">
+          @php(the_excerpt())
+        </div>
+      @endif
+
       <div class="single-post-page__meta">
         @include('partials.entry-meta')
       </div>
