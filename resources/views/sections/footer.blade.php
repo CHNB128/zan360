@@ -1,4 +1,14 @@
 <footer class="site-footer" role="contentinfo">
+  @php
+    $language_labels = [
+      'ru' => 'RU',
+      'en' => 'EN',
+      'kz' => 'KZ',
+      'kk' => 'KZ',
+    ];
+
+    $language_items = [];
+  @endphp
   <div class="site-footer__inner">
     <div class="site-footer__brand-col">
       <a class="site-footer__brand" href="{{ home_url('/') }}" aria-label="{{ get_bloginfo('name') }}">
@@ -16,15 +26,16 @@
     </div>
 
     <div class="site-footer__links-col">
-      <h2 class="site-footer__heading">{{ __('Resources', 'sage') }}</h2>
+      <h2 class="site-footer__heading">{{ __('Categories', 'sage') }}</h2>
       <ul class="site-footer__list">
-        <li><a href="{{ home_url('/posts') }}">{{ __('Insights', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/law-firms') }}">{{ __('Firms & Moves', 'sage') }}</a></li>
+        @foreach ($categories as $category)
+          <li><a href="{{ get_category_link($category) }}">{{ $category->name }}</a></li>
+        @endforeach
       </ul>
     </div>
 
     <div class="site-footer__links-col">
-      <h2 class="site-footer__heading">{{ __('Non-Billable', 'sage') }}</h2>
+      <h2 class="site-footer__heading">{{ __('zan360', 'sage') }}</h2>
       <ul class="site-footer__list">
         <li><a href="{{ home_url('/about') }}">{{ __('About', 'sage') }}</a></li>
         <li><a href="{{ home_url('/contact') }}">{{ __('Contact', 'sage') }}</a></li>
