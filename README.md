@@ -23,6 +23,16 @@ Sage brings proper PHP templating and modern JavaScript tooling to WordPress the
 
 [Read the docs to get started](https://roots.io/sage/docs/installation/)
 
+## Deploy
+
+Run the deploy prep script before uploading the theme to hosting:
+
+```sh
+npm run deploy:prepare
+```
+
+The script installs front-end dependencies, builds the Vite assets, installs Composer production dependencies, and creates `dist/Zan360.kz.zip`.
+
 ## Support us
 
 Roots is an independent open source org, supported only by developers like you. Your sponsorship funds [WP Packages](https://wp-packages.org/) and the entire Roots ecosystem, and keeps them independent. Support us by purchasing [Radicle](https://roots.io/radicle/) or [sponsoring us on GitHub](https://github.com/sponsors/roots) — sponsors get access to our private Discord.
