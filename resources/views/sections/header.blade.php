@@ -70,12 +70,7 @@
 
   <div class="site-header__inner">
     <a class="site-header__brand" href="{{ home_url('/') }}" aria-label="{{ get_bloginfo('name') }}">
-      @if (has_custom_logo())
-        {!! get_custom_logo() !!}
-      @else
-        <span class="site-header__brand-mark" aria-hidden="true">NB</span>
-        <span class="site-header__brand-name">{{ get_bloginfo('name') }}</span>
-      @endif
+      <span class="site-header__brand-name">Zan360</span>
     </a>
 
     <button

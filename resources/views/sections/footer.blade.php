@@ -12,12 +12,7 @@
   <div class="site-footer__inner">
     <div class="site-footer__brand-col">
       <a class="site-footer__brand" href="{{ home_url('/') }}" aria-label="{{ get_bloginfo('name') }}">
-        @if (has_custom_logo())
-          {!! get_custom_logo() !!}
-        @else
-          <span class="site-footer__brand-mark" aria-hidden="true">NB</span>
-          <span class="site-footer__brand-name">{{ get_bloginfo('name') }}</span>
-        @endif
+        <span class="site-footer__brand-name">Zan360</span>
       </a>
 
       <p class="site-footer__copyright">
