@@ -51,8 +51,8 @@
     </header>
 
     @if (! empty($latest_posts))
-      <section class="category-latest" aria-label="{{ __('Latest posts', 'sage') }}">
-        <h2 class="category-latest__title">{{ __('Latest', 'sage') }}</h2>
+      <section class="category-latest" aria-label="{{ \App\theme_translate('Latest posts') }}">
+        <h2 class="category-latest__title">{{ \App\theme_translate('Latest') }}</h2>
         <div class="category-latest__grid">
           @foreach ($latest_posts as $post)
             <article class="category-post-card">
@@ -64,7 +64,7 @@
                 @endif
 
                 <div class="category-post-card__content">
-                  <span class="category-post-card__term">{{ get_the_category($post->ID)[0]->name ?? __('News', 'sage') }}</span>
+                  <span class="category-post-card__term">{{ get_the_category($post->ID)[0]->name ?? \App\theme_translate('News') }}</span>
                   <h3 class="category-post-card__title">{{ get_the_title($post) }}</h3>
                   <time class="category-post-card__date" datetime="{{ get_the_date('c', $post) }}">
                     {{ get_the_date('F j, Y', $post) }}
@@ -77,15 +77,15 @@
       </section>
     @endif
 
-    <section class="category-all-news" aria-label="{{ __('All category news', 'sage') }}">
-      <h2 class="category-all-news__title">{{ __('All news', 'sage') }}</h2>
+    <section class="category-all-news" aria-label="{{ \App\theme_translate('All category news') }}">
+      <h2 class="category-all-news__title">{{ \App\theme_translate('All news') }}</h2>
 
       <div class="category-all-news__filters">
         <a
           href="{{ get_category_link($category) }}"
           class="category-all-news__filter {{ empty($current_tag_slug) ? 'is-active' : '' }}"
         >
-          {{ __('View all', 'sage') }}
+          {{ \App\theme_translate('View all') }}
         </a>
         @foreach ($tag_terms as $tag_term)
           <a
@@ -109,7 +109,7 @@
                 @endif
 
                 <div class="category-post-card__content">
-                  <span class="category-post-card__term">{{ get_the_category()[0]->name ?? __('News', 'sage') }}</span>
+                  <span class="category-post-card__term">{{ get_the_category()[0]->name ?? \App\theme_translate('News') }}</span>
                   <h3 class="category-post-card__title">{{ get_the_title() }}</h3>
                   <time class="category-post-card__date" datetime="{{ get_the_date('c') }}">
                     {{ get_the_date('F j, Y') }}
@@ -125,14 +125,14 @@
             'total' => $category_news_query->max_num_pages,
             'current' => $current_paged,
             'type' => 'list',
-            'prev_text' => __('Previous', 'sage'),
-            'next_text' => __('Next', 'sage'),
+            'prev_text' => \App\theme_translate('Previous'),
+            'next_text' => \App\theme_translate('Next'),
             'add_args' => empty($current_tag_slug) ? [] : ['topic' => $current_tag_slug],
           ]) !!}
         </div>
       @else
         <x-alert type="warning">
-          {!! __('Sorry, no results were found for this tag.', 'sage') !!}
+          {!! \App\theme_translate('Sorry, no results were found for this tag.') !!}
         </x-alert>
       @endif
 

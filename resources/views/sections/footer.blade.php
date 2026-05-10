@@ -44,7 +44,6 @@
       <ul class="site-footer__list">
         <li><a href="{{ \App\theme_localized_page_url('/about') }}">{{ \App\theme_translate('About') }}</a></li>
         <li><a href="{{ \App\theme_localized_page_url('/contact') }}">{{ \App\theme_translate('Contact') }}</a></li>
-        <li><a href="{{ \App\theme_localized_page_url('/advertise') }}">{{ \App\theme_translate('Advertise') }}</a></li>
         <li><a href="{{ \App\theme_localized_page_url('/write-for-us') }}">{{ \App\theme_translate('Write For Us') }}</a></li>
         <li><a href="{{ \App\theme_localized_page_url('/privacy-policy') }}">{{ \App\theme_translate('Privacy Policy') }}</a></li>
         <li><a href="{{ \App\theme_localized_page_url('/terms-and-conditions') }}">{{ \App\theme_translate('Terms and Conditions') }}</a></li>

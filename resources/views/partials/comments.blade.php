@@ -1,8 +1,8 @@
 @if (! post_password_required())
   <section id="comments" class="comments comments-section">
     <header class="comments-section__header">
-      <h2 class="comments-section__title">{{ __('Comments', 'sage') }}</h2>
-      <p class="comments-section__subtitle">{{ __('Share your thoughts about this post.', 'sage') }}</p>
+      <h2 class="comments-section__title">{{ \App\theme_translate('Comments') }}</h2>
+      <p class="comments-section__subtitle">{{ \App\theme_translate('Share your thoughts about this post.') }}</p>
     </header>
 
     @if ($responses())
@@ -35,7 +35,7 @@
 
     @if ($closed())
       <x-alert type="warning">
-        {!! __('Comments are closed.', 'sage') !!}
+        {!! \App\theme_translate('Comments are closed.') !!}
       </x-alert>
     @endif
 

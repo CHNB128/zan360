@@ -8,7 +8,7 @@
   <section class="author-page">
     <header class="author-page__header">
       <h1 class="author-page__title">
-        {{ __('Posts by', 'sage') }} {{ $author->display_name ?? __('Author', 'sage') }}
+        {{ \App\theme_translate('Posts by') }} {{ $author->display_name ?? \App\theme_translate('Author') }}
       </h1>
       @if (! empty(get_the_author_meta('description', $author->ID ?? 0)))
         <p class="author-page__description">
@@ -29,7 +29,7 @@
               @endif
 
               <div class="category-post-card__content">
-                <span class="category-post-card__term">{{ get_the_category()[0]->name ?? __('News', 'sage') }}</span>
+                <span class="category-post-card__term">{{ get_the_category()[0]->name ?? \App\theme_translate('News') }}</span>
                 <h2 class="category-post-card__title">{{ get_the_title() }}</h2>
                 <time class="category-post-card__date" datetime="{{ get_the_date('c') }}">
                   {{ get_the_date('F j, Y') }}
@@ -46,7 +46,7 @@
       </div>
     @else
       <x-alert type="warning">
-        {!! __('No posts were found for this author.', 'sage') !!}
+        {!! \App\theme_translate('No posts were found for this author.') !!}
       </x-alert>
     @endif
   </section>

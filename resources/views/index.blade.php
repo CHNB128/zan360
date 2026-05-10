@@ -57,7 +57,7 @@
     @endphp
 
     @if ($featured_post)
-      <section class="home-hero" aria-label="{{ __('Featured stories', 'sage') }}">
+      <section class="home-hero" aria-label="{{ \App\theme_translate('Featured stories') }}">
         <div class="home-hero__primary">
           <article class="home-hero__featured">
             <a href="{{ get_permalink($featured_post) }}" class="home-hero__featured-link">
@@ -69,7 +69,7 @@
 
               <div class="home-hero__featured-content">
                 <span class="home-hero__category">
-                  {{ get_the_category($featured_post->ID)[0]->name ?? __('News', 'sage') }}
+                  {{ get_the_category($featured_post->ID)[0]->name ?? \App\theme_translate('News') }}
                 </span>
                 <h2 class="home-hero__featured-title">{{ get_the_title($featured_post) }}</h2>
                 <p class="home-hero__excerpt">
@@ -94,7 +94,7 @@
 
                 <div class="home-hero__stacked-content">
                   <span class="home-hero__category">
-                    {{ get_the_category($post->ID)[0]->name ?? __('News', 'sage') }}
+                    {{ get_the_category($post->ID)[0]->name ?? \App\theme_translate('News') }}
                   </span>
                   <h3 class="home-hero__stacked-title">{{ get_the_title($post) }}</h3>
                   <p class="home-hero__excerpt home-hero__excerpt--stacked">
@@ -109,7 +109,7 @@
     @endif
 
     @if (! empty($more_news_posts))
-      <section class="more-news" aria-label="{{ __('More news', 'sage') }}">
+      <section class="more-news" aria-label="{{ \App\theme_translate('More news') }}">
         <div class="more-news__grid">
           @foreach ($more_news_posts as $post)
             <article class="more-news__card">
@@ -122,7 +122,7 @@
 
                 <div class="more-news__content">
                   <span class="more-news__category">
-                    {{ get_the_category($post->ID)[0]->name ?? __('News', 'sage') }}
+                    {{ get_the_category($post->ID)[0]->name ?? \App\theme_translate('News') }}
                   </span>
                   <h3 class="more-news__card-title">{{ get_the_title($post) }}</h3>
                   <p class="more-news__excerpt">{{ wp_trim_words(get_the_excerpt($post), 18, '...') }}</p>
@@ -134,21 +134,11 @@
       </section>
     @endif
 
-    <section class="home-search" aria-label="{{ __('Search news', 'sage') }}">
-      <div class="home-search__inner">
-        <h2 class="home-search__title">{{ __('Search', 'sage') }}</h2>
-        <p class="home-search__text">{{ __('Find stories, interviews, insights and more.', 'sage') }}</p>
-        <div class="home-search__form-wrap">
-          {!! get_search_form(false) !!}
-        </div>
-      </div>
-    </section>
-
     @foreach ($category_sections as $section)
       <section class="category-news category-news--{{ $section['columns'] }}" aria-label="{{ $section['category']->name }}">
         <div class="category-news__heading">
           <h2 class="category-news__title">{{ $section['category']->name }}</h2>
-          <a href="{{ get_category_link($section['category']) }}" class="category-news__all-link">{{ __('See all', 'sage') }}</a>
+          <a href="{{ get_category_link($section['category']) }}" class="category-news__all-link">{{ \App\theme_translate('See all') }}</a>
         </div>
 
         <div class="category-news__grid">
@@ -163,7 +153,7 @@
 
                 <div class="category-news__content">
                   <span class="category-news__category">
-                    {{ get_the_category($post->ID)[0]->name ?? __('News', 'sage') }}
+                    {{ get_the_category($post->ID)[0]->name ?? \App\theme_translate('News') }}
                   </span>
                   <h3 class="category-news__card-title">{{ get_the_title($post) }}</h3>
                   <p class="category-news__excerpt">{{ wp_trim_words(get_the_excerpt($post), 18, '...') }}</p>
@@ -178,7 +168,7 @@
 
   @if (! $is_news_home && ! have_posts())
     <x-alert type="warning">
-      {!! __('Sorry, no results were found.', 'sage') !!}
+      {!! \App\theme_translate('Sorry, no results were found.') !!}
     </x-alert>
 
     {!! get_search_form(false) !!}

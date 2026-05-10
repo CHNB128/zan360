@@ -107,13 +107,39 @@
             'orderby' => 'count',
             'order' => 'DESC',
           ]);
+
+          $no_break_prepositions = [
+            'в', 'во', 'на', 'над', 'под', 'за', 'к', 'ко', 'о', 'об', 'обо', 'от', 'до', 'по', 'при', 'про', 'для', 'без',
+            'из', 'изо', 'у', 'с', 'со', 'а', 'и',
+          ];
+
+          $format_category_name = static function (string $name) use ($no_break_prepositions): string {
+            $words = preg_split('/\s+/u', trim($name)) ?: [];
+            $line_parts = [];
+            $line_count = count($words);
+
+            for ($i = 0; $i < $line_count; $i++) {
+              $word = $words[$i];
+              $normalized_word = mb_strtolower(preg_replace('/[^\p{L}\p{N}]+/u', '', $word) ?? '', 'UTF-8');
+
+              if (in_array($normalized_word, $no_break_prepositions, true) && isset($words[$i + 1])) {
+                $line_parts[] = esc_html($word . ' ' . $words[$i + 1]);
+                $i++;
+                continue;
+              }
+
+              $line_parts[] = esc_html($word);
+            }
+
+            return implode('<br>', $line_parts);
+          };
         @endphp
         @if (! empty($header_categories))
           <ul class="site-header__menu">
             @foreach ($header_categories as $header_category)
               <li>
                 <a href="{{ get_category_link($header_category->term_id) }}">
-                  {{ $header_category->name }}
+                  {!! $format_category_name((string) $header_category->name) !!}
                 </a>
               </li>
             @endforeach
