@@ -9,6 +9,33 @@ namespace App;
 use Illuminate\Support\Facades\Vite;
 
 /**
+ * Inject styles into the block editor iframe.
+ *
+ * Gutenberg renders content inside an iframe, so styles enqueued in the admin
+ * document won't affect the canvas. We inline the built CSS via Vite so the
+ * editor preview matches the front-end.
+ *
+ * @return array
+ */
+add_filter('block_editor_settings_all', function ($settings) {
+    if (! get_current_screen()?->is_block_editor()) {
+        return $settings;
+    }
+
+    try {
+        $css = Vite::content('resources/css/editor.css');
+    } catch (\Throwable $e) {
+        return $settings;
+    }
+
+    $settings['styles'][] = [
+        'css' => $css,
+    ];
+
+    return $settings;
+});
+
+/**
  * Translate a theme interface string through Polylang when available.
  */
 function theme_translate(string $text): string
@@ -41,21 +68,6 @@ function theme_localized_page_url(string $path): string
 
     return home_url('/'.$path);
 }
-
-/**
- * Inject styles into the block editor.
- *
- * @return array
- */
-add_filter('block_editor_settings_all', function ($settings) {
-    $style = Vite::asset('resources/css/editor.css');
-
-    $settings['styles'][] = [
-        'css' => "@import url('{$style}')",
-    ];
-
-    return $settings;
-});
 
 /**
  * Inject scripts into the block editor.
