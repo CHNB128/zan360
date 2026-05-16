@@ -215,6 +215,33 @@ add_action('widgets_init', function () {
 });
 
 /**
+ * Register theme settings in the Customizer.
+ *
+ * @return void
+ */
+add_action('customize_register', function ($wp_customize) {
+    $wp_customize->add_section('zan360_social_links', [
+        'title' => __('Social Links', 'sage'),
+        'priority' => 160,
+    ]);
+
+    $wp_customize->add_setting('zan360_linkedin_url', [
+        'default' => '',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport' => 'refresh',
+    ]);
+
+    $wp_customize->add_control('zan360_linkedin_url', [
+        'label' => __('LinkedIn URL', 'sage'),
+        'section' => 'zan360_social_links',
+        'type' => 'url',
+        'input_attrs' => [
+            'placeholder' => 'https://www.linkedin.com/company/zan360',
+        ],
+    ]);
+});
+
+/**
  * Show a notice when Polylang is missing.
  *
  * @return void
@@ -281,6 +308,7 @@ add_action('init', function () {
         'All category news',
         'All news',
         'View all',
+        'Filter by tag',
         'Previous',
         'Next',
         'Sorry, no results were found for this tag.',

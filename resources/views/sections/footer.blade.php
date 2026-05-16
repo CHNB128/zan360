@@ -18,6 +18,8 @@
     if (is_wp_error($footer_categories)) {
       $footer_categories = [];
     }
+
+    $linkedin_url = get_theme_mod('zan360_linkedin_url');
   @endphp
   <div class="site-footer__inner">
     <div class="site-footer__brand-col">
@@ -50,11 +52,13 @@
       </ul>
     </div>
 
-    <div class="site-footer__links-col">
-      <h2 class="site-footer__heading">{{ \App\theme_translate('Follow Us') }}</h2>
-      <ul class="site-footer__list">
-        <li><a href="#" aria-label="{{ \App\theme_translate('LinkedIn') }}">{{ \App\theme_translate('LinkedIn') }}</a></li>
-      </ul>
-    </div>
+    @if ($linkedin_url)
+      <div class="site-footer__links-col">
+        <h2 class="site-footer__heading">{{ \App\theme_translate('Follow Us') }}</h2>
+        <ul class="site-footer__list">
+          <li><a href="{{ esc_url($linkedin_url) }}" aria-label="{{ \App\theme_translate('LinkedIn') }}">{{ \App\theme_translate('LinkedIn') }}</a></li>
+        </ul>
+      </div>
+    @endif
   </div>
 </footer>

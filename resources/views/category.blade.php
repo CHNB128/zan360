@@ -3,16 +3,19 @@
 @section('content')
   @php
     $category = get_queried_object();
-    $current_tag_slug = sanitize_title(get_query_var('topic'));
+    $current_tag_slug = \App\category_topic_slug();
     $current_paged = max(1, absint(get_query_var('paged')));
+    $category_base_url = get_category_link($category);
 
-    $latest_posts = get_posts([
-      'post_type' => 'post',
-      'post_status' => 'publish',
-      'posts_per_page' => 4,
-      'cat' => $category->term_id,
-      'ignore_sticky_posts' => true,
-    ]);
+    $latest_posts = empty($current_tag_slug)
+      ? get_posts([
+        'post_type' => 'post',
+        'post_status' => 'publish',
+        'posts_per_page' => 4,
+        'cat' => $category->term_id,
+        'ignore_sticky_posts' => true,
+      ])
+      : [];
 
     $tag_terms = get_terms([
       'taxonomy' => 'post_tag',
@@ -31,12 +34,22 @@
       'post_status' => 'publish',
       'posts_per_page' => 9,
       'paged' => $current_paged,
-      'cat' => $category->term_id,
       'ignore_sticky_posts' => true,
+      'tax_query' => [
+        [
+          'taxonomy' => 'category',
+          'field' => 'term_id',
+          'terms' => [$category->term_id],
+        ],
+      ],
     ];
 
     if (! empty($current_tag_slug)) {
-      $news_query_args['tag'] = $current_tag_slug;
+      $news_query_args['tax_query'][] = [
+        'taxonomy' => 'post_tag',
+        'field' => 'slug',
+        'terms' => [$current_tag_slug],
+      ];
     }
 
     $category_news_query = new WP_Query($news_query_args);
@@ -80,17 +93,19 @@
     <section class="category-all-news" aria-label="{{ \App\theme_translate('All category news') }}">
       <h2 class="category-all-news__title">{{ \App\theme_translate('All news') }}</h2>
 
-      <div class="category-all-news__filters">
+      <div class="category-all-news__filters" role="group" aria-label="{{ \App\theme_translate('Filter by tag') }}">
         <a
-          href="{{ get_category_link($category) }}"
+          href="{{ $category_base_url }}"
           class="category-all-news__filter {{ empty($current_tag_slug) ? 'is-active' : '' }}"
+          @if (empty($current_tag_slug)) aria-current="true" @endif
         >
           {{ \App\theme_translate('View all') }}
         </a>
         @foreach ($tag_terms as $tag_term)
           <a
-            href="{{ add_query_arg('topic', $tag_term->slug, get_category_link($category)) }}"
+            href="{{ add_query_arg('topic', $tag_term->slug, $category_base_url) }}"
             class="category-all-news__filter {{ $current_tag_slug === $tag_term->slug ? 'is-active' : '' }}"
+            @if ($current_tag_slug === $tag_term->slug) aria-current="true" @endif
           >
             {{ $tag_term->name }}
           </a>
