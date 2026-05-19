@@ -191,6 +191,31 @@ add_action('after_setup_theme', function () {
 }, 20);
 
 /**
+ * Disable comments and pingbacks across the public site.
+ *
+ * @return void
+ */
+add_action('init', function () {
+    foreach (get_post_types() as $post_type) {
+        remove_post_type_support($post_type, 'comments');
+        remove_post_type_support($post_type, 'trackbacks');
+    }
+});
+
+add_filter('comments_open', '__return_false', 20);
+add_filter('pings_open', '__return_false', 20);
+add_filter('comments_array', '__return_empty_array', 20);
+
+add_action('template_redirect', function () {
+    if (! is_comment_feed()) {
+        return;
+    }
+
+    wp_safe_redirect(home_url('/'), 301);
+    exit;
+});
+
+/**
  * Register the theme sidebars.
  *
  * @return void
@@ -281,8 +306,6 @@ add_action('init', function () {
         'Toggle navigation',
         'Primary navigation',
         'Language switcher',
-        'Account',
-        'Log in',
         'Copyright',
         'Categories',
         'About',
@@ -321,9 +344,6 @@ add_action('init', function () {
         'News',
         'No posts were found for this author.',
         'By',
-        'Comments',
-        'Share your thoughts about this post.',
-        'Comments are closed.',
         'Continued',
     ];
 

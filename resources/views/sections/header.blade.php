@@ -162,11 +162,6 @@
           </a>
         @endforeach
       </div>
-      @if (is_user_logged_in())
-        <a href="{{ admin_url() }}" class="site-header__jobs">{{ \App\theme_translate('Account') }}</a>
-      @else
-        <a href="{{ wp_login_url(function_exists('pll_home_url') ? pll_home_url() : home_url('/')) }}" class="site-header__jobs">{{ \App\theme_translate('Log in') }}</a>
-      @endif
     </nav>
   </div>
 </header>

@@ -43,7 +43,4 @@
     @endif
   </div>
 
-  <div class="single-post-page__comments">
-    @php(comments_template())
-  </div>
 </article>
