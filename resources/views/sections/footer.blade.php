@@ -20,11 +20,14 @@
     }
 
     $linkedin_url = get_theme_mod('zan360_linkedin_url');
+    $site_logo_url = \Illuminate\Support\Facades\Vite::asset('resources/images/PHOTO-2026-04-23-19-51-16.jpg');
   @endphp
   <div class="site-footer__inner">
     <div class="site-footer__brand-col">
       <a class="site-footer__brand" href="{{ home_url('/') }}" aria-label="{{ get_bloginfo('name') }}">
-        <span class="site-footer__brand-name">Zan360</span>
+        <span class="site-footer__logo" aria-hidden="true">
+          <img src="{{ $site_logo_url }}" alt="" loading="lazy" decoding="async">
+        </span>
       </a>
 
       <p class="site-footer__copyright">

@@ -16,6 +16,13 @@
       "defaultDuotone": false,
       "defaultGradients": false,
       "defaultPalette": false,
+      "palette": [
+        {
+          "color": "#6c2ff2",
+          "name": "Primary",
+          "slug": "primary"
+        }
+      ],
       "duotone": []
     },
     "custom": {

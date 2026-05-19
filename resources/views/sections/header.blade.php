@@ -66,11 +66,15 @@
         ['slug' => 'kz', 'label' => 'KZ', 'url' => add_query_arg('lang', 'kz', $current_url)],
       ];
     }
+
+    $site_logo_url = \Illuminate\Support\Facades\Vite::asset('resources/images/PHOTO-2026-04-23-19-51-16.jpg');
   @endphp
 
   <div class="site-header__inner">
     <a class="site-header__brand" href="{{ home_url('/') }}" aria-label="{{ get_bloginfo('name') }}">
-      <span class="site-header__brand-name">Zan360</span>
+      <span class="site-header__logo" aria-hidden="true">
+        <img src="{{ $site_logo_url }}" alt="" loading="eager" decoding="async">
+      </span>
     </a>
 
     <button
