@@ -20,6 +20,7 @@
     }
 
     $linkedin_url = get_theme_mod('zan360_linkedin_url');
+    $instagram_url = get_theme_mod('zan360_instagram_url');
     $site_logo_url = \Illuminate\Support\Facades\Vite::asset('resources/images/PHOTO-2026-04-23-19-51-16.jpg');
   @endphp
   <div class="site-footer__inner">
@@ -55,11 +56,16 @@
       </ul>
     </div>
 
-    @if ($linkedin_url)
+    @if ($linkedin_url || $instagram_url)
       <div class="site-footer__links-col">
         <h2 class="site-footer__heading">{{ \App\theme_translate('Follow Us') }}</h2>
         <ul class="site-footer__list">
-          <li><a href="{{ esc_url($linkedin_url) }}" aria-label="{{ \App\theme_translate('LinkedIn') }}">{{ \App\theme_translate('LinkedIn') }}</a></li>
+          @if ($linkedin_url)
+            <li><a href="{{ esc_url($linkedin_url) }}" aria-label="{{ \App\theme_translate('LinkedIn') }}">{{ \App\theme_translate('LinkedIn') }}</a></li>
+          @endif
+          @if ($instagram_url)
+            <li><a href="{{ esc_url($instagram_url) }}" aria-label="{{ \App\theme_translate('Instagram') }}">{{ \App\theme_translate('Instagram') }}</a></li>
+          @endif
         </ul>
       </div>
     @endif

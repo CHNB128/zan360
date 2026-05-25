@@ -264,6 +264,21 @@ add_action('customize_register', function ($wp_customize) {
             'placeholder' => 'https://www.linkedin.com/company/zan360',
         ],
     ]);
+
+    $wp_customize->add_setting('zan360_instagram_url', [
+        'default' => '',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport' => 'refresh',
+    ]);
+
+    $wp_customize->add_control('zan360_instagram_url', [
+        'label' => __('Instagram URL', 'sage'),
+        'section' => 'zan360_social_links',
+        'type' => 'url',
+        'input_attrs' => [
+            'placeholder' => 'https://www.instagram.com/zan360',
+        ],
+    ]);
 });
 
 /**
@@ -316,6 +331,7 @@ add_action('init', function () {
         'Terms and Conditions',
         'Follow Us',
         'LinkedIn',
+        'Instagram',
         'Skip to content',
         'Search for:',
         'Search …',
