@@ -10,21 +10,22 @@
   @endphp
 
   @if ($is_news_home)
+    <div class="home-page">
     @php
       $hero_posts = get_posts([
         'post_type' => 'post',
         'post_status' => 'publish',
-        'posts_per_page' => 4,
+        'posts_per_page' => 6,
         'ignore_sticky_posts' => true,
       ]);
       $featured_post = $hero_posts[0] ?? null;
-      $stacked_posts = array_slice($hero_posts, 1, 3);
+      $stacked_posts = array_slice($hero_posts, 1, 5);
       $hero_post_ids = array_map(static fn ($post) => $post->ID, $hero_posts);
       $more_news_posts = get_posts([
         'post_type' => 'post',
         'post_status' => 'publish',
         'posts_per_page' => 3,
-        'offset' => 4,
+        'offset' => 6,
         'ignore_sticky_posts' => true,
       ]);
 
@@ -57,53 +58,68 @@
     @endphp
 
     @if ($featured_post)
+      @php
+        $featured_author = get_the_author_meta('display_name', $featured_post->post_author);
+        $featured_time_ago = sprintf(
+          \App\theme_translate('%s ago'),
+          human_time_diff(get_post_time('U', true, $featured_post), current_time('timestamp'))
+        );
+      @endphp
       <section class="home-hero" aria-label="{{ \App\theme_translate('Featured stories') }}">
         <div class="home-hero__primary">
           <article class="home-hero__featured">
             <a href="{{ get_permalink($featured_post) }}" class="home-hero__featured-link">
-              @if (has_post_thumbnail($featured_post))
-                {!! get_the_post_thumbnail($featured_post, 'large', ['class' => 'home-hero__featured-image']) !!}
-              @else
-                <div class="home-hero__featured-image home-hero__featured-image--placeholder" aria-hidden="true"></div>
-              @endif
+              <div class="home-hero__featured-media">
+                @if (has_post_thumbnail($featured_post))
+                  {!! get_the_post_thumbnail($featured_post, 'large', ['class' => 'home-hero__featured-image']) !!}
+                @else
+                  <div class="home-hero__featured-image home-hero__featured-image--placeholder" aria-hidden="true"></div>
+                @endif
+              </div>
 
               <div class="home-hero__featured-content">
-                <span class="home-hero__category">
+                <span class="home-hero__category home-hero__category--featured">
                   {{ get_the_category($featured_post->ID)[0]->name ?? \App\theme_translate('News') }}
                 </span>
                 <h2 class="home-hero__featured-title">{{ get_the_title($featured_post) }}</h2>
-                <p class="home-hero__excerpt">
-                  {{ wp_trim_words(get_the_excerpt($featured_post), 24, '...') }}
+                <p class="home-hero__featured-meta">
+                  <span>{{ $featured_author }}</span>
+                  <span class="home-hero__featured-meta-sep" aria-hidden="true">-</span>
+                  <time datetime="{{ get_post_time('c', true, $featured_post) }}">{{ $featured_time_ago }}</time>
                 </p>
               </div>
             </a>
           </article>
         </div>
 
-        <div class="home-hero__divider" aria-hidden="true"></div>
-
         <div class="home-hero__secondary">
-          @foreach ($stacked_posts as $post)
-            <article class="home-hero__stacked-item">
-              <a href="{{ get_permalink($post) }}" class="home-hero__stacked-link">
-                @if (has_post_thumbnail($post))
-                  {!! get_the_post_thumbnail($post, 'medium_large', ['class' => 'home-hero__stacked-image']) !!}
-                @else
-                  <div class="home-hero__stacked-image home-hero__stacked-image--placeholder" aria-hidden="true"></div>
-                @endif
+          <header class="home-hero__sidebar-heading">
+            <h2 class="home-hero__sidebar-title">{{ \App\theme_translate('Main') }}</h2>
+          </header>
 
-                <div class="home-hero__stacked-content">
-                  <span class="home-hero__category">
-                    {{ get_the_category($post->ID)[0]->name ?? \App\theme_translate('News') }}
-                  </span>
-                  <h3 class="home-hero__stacked-title">{{ get_the_title($post) }}</h3>
-                  <p class="home-hero__excerpt home-hero__excerpt--stacked">
-                    {{ wp_trim_words(get_the_excerpt($post), 18, '...') }}
-                  </p>
-                </div>
-              </a>
-            </article>
-          @endforeach
+          <div class="home-hero__stacked-list">
+            @foreach ($stacked_posts as $post)
+              <article class="home-hero__stacked-item">
+                <a href="{{ get_permalink($post) }}" class="home-hero__stacked-link">
+                  @if (has_post_thumbnail($post))
+                    {!! get_the_post_thumbnail($post, 'thumbnail', ['class' => 'home-hero__stacked-image']) !!}
+                  @else
+                    <div class="home-hero__stacked-image home-hero__stacked-image--placeholder" aria-hidden="true"></div>
+                  @endif
+
+                  <div class="home-hero__stacked-content">
+                    <h3 class="home-hero__stacked-title">{{ get_the_title($post) }}</h3>
+                    <div class="home-hero__stacked-meta">
+                      <span class="home-hero__stacked-author">{{ get_the_author_meta('display_name', $post->post_author) }}</span>
+                      <time class="home-hero__stacked-date" datetime="{{ get_the_date('c', $post) }}">
+                        {{ get_the_date('d.m.Y', $post) }}
+                      </time>
+                    </div>
+                  </div>
+                </a>
+              </article>
+            @endforeach
+          </div>
         </div>
       </section>
     @endif
@@ -164,6 +180,7 @@
         </div>
       </section>
     @endforeach
+    </div>
   @endif
 
   @if (! $is_news_home && ! have_posts())

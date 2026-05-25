@@ -106,10 +106,10 @@
         @php
           $header_categories = get_categories([
             'taxonomy' => 'category',
-            'hide_empty' => true,
+            'hide_empty' => false,
             'number' => 5,
-            'orderby' => 'count',
-            'order' => 'DESC',
+            'orderby' => 'name',
+            'order' => 'ASC',
           ]);
 
           $no_break_prepositions = [
