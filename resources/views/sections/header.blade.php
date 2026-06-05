@@ -124,7 +124,10 @@
 
             for ($i = 0; $i < $line_count; $i++) {
               $word = $words[$i];
-              $normalized_word = mb_strtolower(preg_replace('/[^\p{L}\p{N}]+/u', '', $word) ?? '', 'UTF-8');
+              $normalized_word = preg_replace('/[^\p{L}\p{N}]+/u', '', $word) ?? '';
+              $normalized_word = function_exists('mb_strtolower')
+                ? mb_strtolower($normalized_word, 'UTF-8')
+                : strtolower($normalized_word);
 
               if (in_array($normalized_word, $no_break_prepositions, true) && isset($words[$i + 1])) {
                 $line_parts[] = esc_html($word . ' ' . $words[$i + 1]);

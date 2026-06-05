@@ -12,20 +12,62 @@
   @if ($is_news_home)
     <div class="home-page">
     @php
-      $hero_posts = get_posts([
-        'post_type' => 'post',
-        'post_status' => 'publish',
-        'posts_per_page' => 6,
-        'ignore_sticky_posts' => true,
-      ]);
-      $featured_post = $hero_posts[0] ?? null;
-      $stacked_posts = array_slice($hero_posts, 1, 5);
-      $hero_post_ids = array_map(static fn ($post) => $post->ID, $hero_posts);
+      $selected_featured_post_id = absint(get_theme_mod('zan360_home_hero_featured_post'));
+      $featured_post = $selected_featured_post_id ? get_post($selected_featured_post_id) : null;
+
+      if (! $featured_post || $featured_post->post_type !== 'post' || $featured_post->post_status !== 'publish') {
+        $featured_post = get_posts([
+          'post_type' => 'post',
+          'post_status' => 'publish',
+          'posts_per_page' => 1,
+          'ignore_sticky_posts' => true,
+        ])[0] ?? null;
+      }
+
+      $selected_stacked_post_ids = [];
+      for ($i = 1; $i <= 5; $i++) {
+        $selected_stacked_post_id = absint(get_theme_mod("zan360_home_hero_side_post_{$i}"));
+
+        if ($selected_stacked_post_id > 0) {
+          $selected_stacked_post_ids[] = $selected_stacked_post_id;
+        }
+      }
+
+      $selected_stacked_post_ids = array_values(array_unique(array_filter($selected_stacked_post_ids, static function ($post_id) use ($featured_post): bool {
+        return ! $featured_post || (int) $post_id !== (int) $featured_post->ID;
+      })));
+
+      $stacked_posts = ! empty($selected_stacked_post_ids)
+        ? get_posts([
+          'post_type' => 'post',
+          'post_status' => 'publish',
+          'posts_per_page' => count($selected_stacked_post_ids),
+          'post__in' => $selected_stacked_post_ids,
+          'orderby' => 'post__in',
+          'ignore_sticky_posts' => true,
+        ])
+        : [];
+
+      $hero_post_ids = array_map(static fn ($post) => $post->ID, array_filter(array_merge([$featured_post], $stacked_posts)));
+
+      if (count($stacked_posts) < 5) {
+        $fallback_stacked_posts = get_posts([
+          'post_type' => 'post',
+          'post_status' => 'publish',
+          'posts_per_page' => 5 - count($stacked_posts),
+          'post__not_in' => $hero_post_ids,
+          'ignore_sticky_posts' => true,
+        ]);
+
+        $stacked_posts = array_merge($stacked_posts, $fallback_stacked_posts);
+        $hero_post_ids = array_map(static fn ($post) => $post->ID, array_filter(array_merge([$featured_post], $stacked_posts)));
+      }
+
       $more_news_posts = get_posts([
         'post_type' => 'post',
         'post_status' => 'publish',
         'posts_per_page' => 3,
-        'offset' => 6,
+        'post__not_in' => $hero_post_ids,
         'ignore_sticky_posts' => true,
       ]);
 

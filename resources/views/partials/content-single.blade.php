@@ -37,6 +37,18 @@
       @php(the_content())
     </div>
 
+    @php($post_tags = get_the_tags())
+    @if (! empty($post_tags))
+      <footer class="single-post-page__tags" aria-label="{{ \App\theme_translate('Tags') }}">
+        <h2 class="single-post-page__tags-title">{{ \App\theme_translate('Tags') }}</h2>
+        <div class="single-post-page__tags-list">
+          @foreach ($post_tags as $tag)
+            <a href="{{ get_tag_link($tag->term_id) }}" rel="tag">{{ $tag->name }}</a>
+          @endforeach
+        </div>
+      </footer>
+    @endif
+
     @if ($pagination())
       <footer class="single-post-page__footer">
         <nav class="page-nav" aria-label="Page">

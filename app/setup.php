@@ -81,11 +81,13 @@ function theme_is_uncategorized_category($category): bool
     }
 
     $default_category_id = (int) get_option('default_category');
-    $normalized_name = mb_strtolower(trim((string) $term->name), 'UTF-8');
+    $name = trim((string) $term->name);
+    $normalized_name = strtolower($name);
 
     return (int) $term->term_id === $default_category_id
         || (string) $term->slug === 'uncategorized'
-        || in_array($normalized_name, ['без категории', 'uncategorized'], true);
+        || in_array($name, ['Без категории', 'без категории'], true)
+        || $normalized_name === 'uncategorized';
 }
 
 /**
@@ -134,6 +136,55 @@ function theme_visible_categories(array $args = []): array
     return array_values(array_filter($categories, static function ($category): bool {
         return ! theme_is_uncategorized_category($category);
     }));
+}
+
+/**
+ * Sanitize a Customizer post selector value.
+ */
+function theme_sanitize_post_setting($value): int
+{
+    $post_id = absint($value);
+
+    if ($post_id === 0) {
+        return 0;
+    }
+
+    $post = get_post($post_id);
+
+    return $post instanceof \WP_Post && $post->post_type === 'post'
+        ? $post_id
+        : 0;
+}
+
+/**
+ * Build post choices for Customizer select controls.
+ *
+ * @return array<int|string, string>
+ */
+function theme_post_select_choices(): array
+{
+    $choices = [
+        0 => __('Последняя запись', 'sage'),
+    ];
+
+    $posts = get_posts([
+        'post_type' => 'post',
+        'post_status' => 'publish',
+        'posts_per_page' => 200,
+        'orderby' => 'date',
+        'order' => 'DESC',
+        'ignore_sticky_posts' => true,
+    ]);
+
+    foreach ($posts as $post) {
+        $choices[$post->ID] = sprintf(
+            '%s - %s',
+            get_the_title($post),
+            get_the_date('d.m.Y', $post)
+        );
+    }
+
+    return $choices;
 }
 
 /**
@@ -325,8 +376,45 @@ add_action('widgets_init', function () {
  * @return void
  */
 add_action('customize_register', function ($wp_customize) {
+    $wp_customize->add_section('zan360_home_hero', [
+        'title' => __('Главный блок на главной', 'sage'),
+        'priority' => 150,
+    ]);
+
+    $post_choices = theme_post_select_choices();
+
+    $wp_customize->add_setting('zan360_home_hero_featured_post', [
+        'default' => 0,
+        'sanitize_callback' => __NAMESPACE__.'\\theme_sanitize_post_setting',
+        'transport' => 'refresh',
+    ]);
+
+    $wp_customize->add_control('zan360_home_hero_featured_post', [
+        'label' => __('Главная запись', 'sage'),
+        'section' => 'zan360_home_hero',
+        'type' => 'select',
+        'choices' => $post_choices,
+    ]);
+
+    for ($i = 1; $i <= 5; $i++) {
+        $setting_id = "zan360_home_hero_side_post_{$i}";
+
+        $wp_customize->add_setting($setting_id, [
+            'default' => 0,
+            'sanitize_callback' => __NAMESPACE__.'\\theme_sanitize_post_setting',
+            'transport' => 'refresh',
+        ]);
+
+        $wp_customize->add_control($setting_id, [
+            'label' => sprintf(__('Запись в правом столбце %d', 'sage'), $i),
+            'section' => 'zan360_home_hero',
+            'type' => 'select',
+            'choices' => $post_choices,
+        ]);
+    }
+
     $wp_customize->add_section('zan360_social_links', [
-        'title' => __('Social Links', 'sage'),
+        'title' => __('Социальные сети', 'sage'),
         'priority' => 160,
     ]);
 
@@ -337,7 +425,7 @@ add_action('customize_register', function ($wp_customize) {
     ]);
 
     $wp_customize->add_control('zan360_linkedin_url', [
-        'label' => __('LinkedIn URL', 'sage'),
+        'label' => __('Ссылка на LinkedIn', 'sage'),
         'section' => 'zan360_social_links',
         'type' => 'url',
         'input_attrs' => [
@@ -352,7 +440,7 @@ add_action('customize_register', function ($wp_customize) {
     ]);
 
     $wp_customize->add_control('zan360_instagram_url', [
-        'label' => __('Instagram URL', 'sage'),
+        'label' => __('Ссылка на Instagram', 'sage'),
         'section' => 'zan360_social_links',
         'type' => 'url',
         'input_attrs' => [
@@ -430,6 +518,8 @@ add_action('init', function () {
         'Filter by tag',
         'Previous',
         'Next',
+        'Метка',
+        'Записи с меткой',
         'Sorry, no results were found for this tag.',
         'Sorry, no results were found.',
         'Page not found',
@@ -440,6 +530,7 @@ add_action('init', function () {
         'News',
         'No posts were found for this author.',
         'By',
+        'Tags',
         'Continued',
     ];
 
