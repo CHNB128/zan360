@@ -104,13 +104,13 @@
         ]) !!}
       @else
         @php
-          $header_categories = get_categories([
+          $header_categories = \App\theme_visible_categories([
             'taxonomy' => 'category',
             'hide_empty' => false,
-            'number' => 5,
             'orderby' => 'name',
             'order' => 'ASC',
           ]);
+          $header_categories = array_slice($header_categories, 0, 5);
 
           $no_break_prepositions = [
             'в', 'во', 'на', 'над', 'под', 'за', 'к', 'ко', 'о', 'об', 'обо', 'от', 'до', 'по', 'при', 'про', 'для', 'без',

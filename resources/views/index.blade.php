@@ -30,7 +30,7 @@
       ]);
 
       $category_sections = [];
-      $categories = get_categories([
+      $categories = \App\theme_visible_categories([
         'taxonomy' => 'category',
         'hide_empty' => true,
         'orderby' => 'name',
@@ -60,6 +60,7 @@
     @if ($featured_post)
       @php
         $featured_author = get_the_author_meta('display_name', $featured_post->post_author);
+        $featured_category = \App\theme_primary_post_category($featured_post);
         $featured_time_ago = sprintf(
           \App\theme_translate('%s ago'),
           human_time_diff(get_post_time('U', true, $featured_post), current_time('timestamp'))
@@ -78,9 +79,9 @@
               </div>
 
               <div class="home-hero__featured-content">
-                <span class="home-hero__category home-hero__category--featured">
-                  {{ get_the_category($featured_post->ID)[0]->name ?? \App\theme_translate('News') }}
-                </span>
+                @if ($featured_category)
+                  <span class="home-hero__category home-hero__category--featured">{{ $featured_category->name }}</span>
+                @endif
                 <h2 class="home-hero__featured-title">{{ get_the_title($featured_post) }}</h2>
                 <p class="home-hero__featured-meta">
                   <span>{{ $featured_author }}</span>
@@ -137,9 +138,9 @@
                 @endif
 
                 <div class="more-news__content">
-                  <span class="more-news__category">
-                    {{ get_the_category($post->ID)[0]->name ?? \App\theme_translate('News') }}
-                  </span>
+                  @if ($post_category = \App\theme_primary_post_category($post))
+                    <span class="more-news__category">{{ $post_category->name }}</span>
+                  @endif
                   <h3 class="more-news__card-title">{{ get_the_title($post) }}</h3>
                   <p class="more-news__excerpt">{{ wp_trim_words(get_the_excerpt($post), 18, '...') }}</p>
                 </div>
@@ -168,9 +169,9 @@
                 @endif
 
                 <div class="category-news__content">
-                  <span class="category-news__category">
-                    {{ get_the_category($post->ID)[0]->name ?? \App\theme_translate('News') }}
-                  </span>
+                  @if ($post_category = \App\theme_primary_post_category($post))
+                    <span class="category-news__category">{{ $post_category->name }}</span>
+                  @endif
                   <h3 class="category-news__card-title">{{ get_the_title($post) }}</h3>
                   <p class="category-news__excerpt">{{ wp_trim_words(get_the_excerpt($post), 18, '...') }}</p>
                 </div>

@@ -70,6 +70,86 @@ function theme_localized_page_url(string $path): string
 }
 
 /**
+ * Check whether a category is the default uncategorized bucket.
+ */
+function theme_is_uncategorized_category($category): bool
+{
+    $term = is_numeric($category) ? get_category((int) $category) : $category;
+
+    if (! $term instanceof \WP_Term) {
+        return false;
+    }
+
+    $default_category_id = (int) get_option('default_category');
+    $normalized_name = mb_strtolower(trim((string) $term->name), 'UTF-8');
+
+    return (int) $term->term_id === $default_category_id
+        || (string) $term->slug === 'uncategorized'
+        || in_array($normalized_name, ['без категории', 'uncategorized'], true);
+}
+
+/**
+ * Return public-facing post categories, excluding "Uncategorized".
+ *
+ * @return array<int, \WP_Term>
+ */
+function theme_visible_post_categories($post = null): array
+{
+    if ($post instanceof \WP_Post) {
+        $post = $post->ID;
+    }
+
+    $categories = get_the_category($post);
+
+    if (! is_array($categories)) {
+        return [];
+    }
+
+    return array_values(array_filter($categories, static function ($category): bool {
+        return ! theme_is_uncategorized_category($category);
+    }));
+}
+
+/**
+ * Return the first public-facing post category.
+ */
+function theme_primary_post_category($post = null): ?\WP_Term
+{
+    return theme_visible_post_categories($post)[0] ?? null;
+}
+
+/**
+ * Return public-facing blog categories, excluding "Uncategorized".
+ *
+ * @return array<int, \WP_Term>
+ */
+function theme_visible_categories(array $args = []): array
+{
+    $categories = get_categories($args);
+
+    if (! is_array($categories) || is_wp_error($categories)) {
+        return [];
+    }
+
+    return array_values(array_filter($categories, static function ($category): bool {
+        return ! theme_is_uncategorized_category($category);
+    }));
+}
+
+/**
+ * Remove "Uncategorized" category links from WordPress menus.
+ *
+ * @param  array<int, \WP_Post>  $items
+ * @return array<int, \WP_Post>
+ */
+add_filter('wp_nav_menu_objects', function (array $items): array {
+    return array_values(array_filter($items, static function ($item): bool {
+        return ($item->object ?? '') !== 'category'
+            || ! theme_is_uncategorized_category((int) ($item->object_id ?? 0));
+    }));
+});
+
+/**
  * Inject scripts into the block editor.
  *
  * @return void

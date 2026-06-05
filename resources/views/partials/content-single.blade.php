@@ -1,11 +1,14 @@
 <article @php(post_class('single-post-page h-entry'))>
   <header class="single-post-page__header">
     <div class="single-post-page__inner">
-      <p class="single-post-page__categories">
-        @foreach (get_the_category() as $category)
-          <a href="{{ get_category_link($category->term_id) }}">{{ $category->name }}</a>
-        @endforeach
-      </p>
+      @php($post_categories = \App\theme_visible_post_categories())
+      @if (! empty($post_categories))
+        <p class="single-post-page__categories">
+          @foreach ($post_categories as $category)
+            <a href="{{ get_category_link($category->term_id) }}">{{ $category->name }}</a>
+          @endforeach
+        </p>
+      @endif
 
       <h1 class="single-post-page__title p-name">
         {!! $title !!}

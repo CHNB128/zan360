@@ -29,7 +29,9 @@
               @endif
 
               <div class="category-post-card__content">
-                <span class="category-post-card__term">{{ get_the_category()[0]->name ?? \App\theme_translate('News') }}</span>
+                @if ($post_category = \App\theme_primary_post_category())
+                  <span class="category-post-card__term">{{ $post_category->name }}</span>
+                @endif
                 <h2 class="category-post-card__title">{{ get_the_title() }}</h2>
                 <time class="category-post-card__date" datetime="{{ get_the_date('c') }}">
                   {{ get_the_date('F j, Y') }}

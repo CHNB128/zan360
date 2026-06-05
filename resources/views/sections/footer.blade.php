@@ -8,7 +8,7 @@
     ];
 
     $language_items = [];
-    $footer_categories = get_categories([
+    $footer_categories = \App\theme_visible_categories([
       'taxonomy' => 'category',
       'hide_empty' => false,
       'orderby' => 'name',
