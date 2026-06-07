@@ -28,6 +28,13 @@ composer install \
   --optimize-autoloader \
   --no-interaction
 
+ACORN_RENDERER_DIST="$ROOT_DIR/vendor/roots/acorn/src/Illuminate/Foundation/resources/exceptions/renderer/dist"
+
+if [[ ! -f "$ACORN_RENDERER_DIST/styles.css" || ! -f "$ACORN_RENDERER_DIST/scripts.js" ]]; then
+  echo "Missing Acorn exception renderer assets. Re-run composer install and make sure vendor/roots/acorn is complete." >&2
+  exit 1
+fi
+
 rm -rf "$BUILD_DIR" "$ZIP_PATH"
 mkdir -p "$BUILD_DIR"
 
