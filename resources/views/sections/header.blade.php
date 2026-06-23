@@ -110,7 +110,6 @@
             'orderby' => 'name',
             'order' => 'ASC',
           ]);
-          $header_categories = array_slice($header_categories, 0, 5);
 
           $no_break_prepositions = [
             'в', 'во', 'на', 'над', 'под', 'за', 'к', 'ко', 'о', 'об', 'обо', 'от', 'до', 'по', 'при', 'про', 'для', 'без',
