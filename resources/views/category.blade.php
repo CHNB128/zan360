@@ -151,7 +151,11 @@
         </div>
       @else
         <x-alert type="warning">
-          {!! \App\theme_translate('Sorry, no results were found for this tag.') !!}
+          @if (! empty($current_tag_slug))
+            {!! \App\theme_translate('Sorry, no results were found for this tag.') !!}
+          @else
+            {!! \App\theme_translate('Sorry, no results were found.') !!}
+          @endif
         </x-alert>
       @endif
 
